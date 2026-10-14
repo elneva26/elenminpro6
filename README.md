@@ -25,7 +25,7 @@ Kelas : **Sistem Informasi A'25**
 - [BAB VII Polymorphism dan Abstraction](#bab-vii-polymorphism-dan-abstraction)
 - [BAB VIII Interface](#bab-viii-interface)
 - [BAB IX JDBC (Java Database Connectivity)](#bab-ix-jdbc-(java-database-connecyivity))
-- [BAB X ORM (Object-Relational Mapping)](#bab-x-jdbc-(object-relational-mapping))
+- [BAB X ORM (Object Relational Mapping)](#bab-x-jdbc-(object-relational-mapping))
 - [BAB XI KESIMPULAN](#bab-xi-kesimpulan)
 
 ---
@@ -594,7 +594,7 @@ Pada gambar di atas menunjukkan penambahan dependency di file pom.xml. Dependenc
 Pada gambar di atas menunjukkan class DAO (Data Access Object), yaitu tempat menyimpan kode yang khusus mengurus komunikasi dengan database. Di dalamnya terdapat perintah SQL untuk menambah, membaca, mengubah, dan menghapus data pemasok dan pengadaan. Dengan memisahkan perintah SQL ke dalam DAO, bagian lain dari program tidak perlu tahu cara kerja database, serta menunjukkan adanya penerapan PreparedStatement. Cara ini membuat perintah SQL ditulis dengan tanda “?” sebagai tempat nilai, lalu nilainya diisi terpisah menggunakan method seperti setString() atau setInt(). Dengan cara ini, input dari pengguna tidak dianggap sebagai bagian dari perintah SQL, sehingga program terhindar dari SQL Injection, yaitu serangan dengan menyisipkan kode SQL berbahaya lewat input.
 
 
-## **BAB X ORM (Object-Relational Mapping)**
+## **BAB X ORM (Object Relational Mapping)**
 
 ### **10.1 Membuat folder resource**
 
