@@ -24,7 +24,9 @@ Kelas : **Sistem Informasi A'25**
 - [BAB VI Dummy data pada arrayList](#bab-vi-dummy-data-pada-arraylist)
 - [BAB VII Polymorphism dan Abstraction](#bab-vii-polymorphism-dan-abstraction)
 - [BAB VIII Interface](#bab-viii-interface)
-- [BAB IX Kesimpulan](#bab-ix-kesimpulan)
+- [BAB IX JDBC (Java Database Connectivity)](#bab-ix-jdbc-(java-database-connecyivity-))
+- [BAB X ORM (Object-Relational Mapping)](#bab-x-jdbc-(object-relational-mapping-))
+- [BAB XI KESIMPULAN](#bab-xi-kesimpulan)
 
 ---
 
@@ -617,14 +619,20 @@ Pada gambar di atas menunjukkan pembuatan kelas EntityManagerProvider yang berad
 <img width="500" alt="image" src="https://github.com/user-attachments/assets/068873f9-c219-446e-8420-b95445c01941" />
 
 
-Pada gambar di atas menunjukkan pembuatan kelas BarangManager yang berada di dalam package model.manager. Kelas ini berfungsi untuk mengelola dan mengeksekusi operasi basis data secara objek (object-relational mapping) pada entitas barang, seperti method tambah(Barang barang) yang menangani proses penyimpanan data ke database menggunakan EntityManager dari Hibernate. Kelas ini memastikan proses transaksi basis data—mulai dari membuka transaksi (begin), menyimpan objek (persist), melakukan commit, rollback jika terjadi kesalahan, hingga menutup sesi (close)—dapat berjalan dengan aman dan terstruktur melalui blok try-catch-finally. Tanpa adanya kelas pengelola ini, program tidak memiliki komponen untuk menjalankan fungsi CRUD entitas barang secara otomatis menggunakan framework ORM.
+Pada gambar di atas menunjukkan pembuatan kelas BarangManager yang berada di dalam package model.manager. Kelas ini berfungsi untuk mengelola dan mengeksekusi operasi basis data secara objek (object-relational mapping) pada entitas barang, seperti method tambah(Barang barang) yang menangani proses penyimpanan data ke database menggunakan EntityManager dari Hibernate. Kelas ini memastikan proses transaksi basis data mulai dari membuka transaksi (begin), menyimpan objek (persist), melakukan commit, rollback jika terjadi kesalahan, hingga menutup sesi (close) dapat berjalan dengan aman dan terstruktur melalui blok try-catch-finally. Tanpa adanya kelas pengelola ini, program tidak memiliki komponen untuk menjalankan fungsi CRUD entitas barang secara otomatis menggunakan framework ORM.
 
-## **BAB IX KESIMPULAN**
+## **BAB XI KESIMPULAN**
 
-Program Sistem Manajemen CV Mandiri Prima Kreatif merupakan aplikasi berbasis Java yang digunakan untuk mengelola data barang, pemasok, dan pengadaan. Pada pengembangannya, program menerapkan berbagai konsep Pemrograman Berorientasi Objek (PBO), seperti access modifier, encapsulation, inheritance, abstraction, polymorphism, serta penggunaan ArrayList untuk menyimpan data selama program berjalan.
+Program Sistem Manajemen CV Mandiri Prima Kreatif merupakan aplikasi berbasis Java yang digunakan untuk mengelola data barang, pemasok, dan pengadaan. Pada pengembangannya, program menerapkan berbagai konsep Pemrograman Berorientasi Objek (PBO), seperti access modifier, encapsulation, inheritance, abstraction, polymorphism, serta integrasi Database MySQL sebagai media penyimpanan data secara permanen (persistent).
 
-Konsep abstraction diterapkan melalui **Barang** sebagai abstract class yang memiliki abstract method dan kemudian diimplementasikan oleh **BarangElektronik** dan **BarangNonElektronik**. Konsep inheritance diterapkan melalui hubungan antara superclass dan subclass tersebut, serta pada struktur **View** melalui **BaseView** dan **EntitasView**. Sementara itu, polymorphism diterapkan melalui overriding method pada subclass dan **View**, serta overloading pada beberapa method seperti pencarian barang dan pembacaan input. Program juga menerapkan keyword super untuk memanggil constructor superclass dan final untuk menjaga atribut maupun method tertentu agar tidak dapat diubah atau dioverride.
+Konsep abstraction diterapkan melalui Barang sebagai abstract class yang memiliki abstract method dan kemudian diimplementasikan oleh BarangElektronik dan BarangNonElektronik. Konsep inheritance diterapkan melalui hubungan antara superclass dan subclass tersebut, serta pada struktur View melalui BaseView dan EntitasView. Sementara itu, polymorphism diterapkan melalui overriding method pada subclass dan View, serta overloading pada beberapa method seperti pencarian barang dan pembacaan input. Program juga menerapkan keyword super untuk memanggil constructor superclass dan final untuk menjaga atribut maupun method tertentu agar tidak dapat diubah atau di-override.
 
-Selain itu, program menggunakan pola Model-View-Controller (MVC) dengan memisahkan bagian model, view, dan controller, sehingga pengelolaan data, proses program, dan interaksi dengan pengguna menjadi lebih terorganisasi. Sebagai nilai tambah, program juga menggunakan interface Kelola sebagai kontrak yang diterapkan oleh controller untuk operasi pengelolaan data.
+Selain itu, program menggunakan pola Model-View-Controller (MVC) dengan memisahkan bagian model, view, dan controller, sehingga pengelolaan data, proses program, dan interaksi dengan pengguna menjadi lebih terorganisasi. Pada Mini Project 4 ini, sistem dikembangkan dengan arsitektur hibrida (hybrid architecture) dalam mengakses basis data:
 
-Program dilengkapi dengan exception handling dan validasi input untuk menangani berbagai kesalahan, seperti input bukan angka, input kosong, ID yang tidak valid atau sudah digunakan, stok negatif, nomor telepon yang tidak sesuai, serta tanggal yang tidak valid. Dengan penerapan berbagai konsep tersebut, program menjadi lebih terstruktur, mudah dipahami, memiliki pembagian tanggung jawab yang jelas, mengurangi pengulangan kode, dan lebih mudah dikembangkan. Program ini menunjukkan penerapan konsep-konsep PBO yang telah dipelajari dalam bentuk aplikasi yang dapat digunakan untuk mengelola data secara terorganisasi.
+JDBC Prepared Statement & DAO (di package config) digunakan untuk mengelola entitas Pemasok dan Pengadaan secara aman dari ancaman SQL Injection.
+
+Framework ORM Hibernate / JPA (di package model.manager) diimplementasikan sebagai Nilai Tambah untuk mengelola entitas Barang secara otomatis berbasis objek.
+
+Data Awal (Dummy Data) disajikan secara langsung melalui skrip .sql yang diimpor ke basis data MySQL, sehingga saat fitur read dijalankan, data dapat langsung ditampilkan tanpa harus menginput dari awal melalui kode.
+
+Program dilengkapi dengan exception handling dan validasi input berlapis untuk menangani berbagai kesalahan, seperti input bukan angka, input kosong, ID yang tidak valid atau sudah digunakan, stok negatif, nomor telepon yang tidak sesuai, serta format tanggal yang tidak valid. Dengan penerapan berbagai konsep tersebut, program menjadi jauh lebih terstruktur, mudah dipahami, memiliki pembagian tanggung jawab yang jelas, mengurangi pengulangan kode, dan siap digunakan untuk mengelola data inventaris secara nyata.
