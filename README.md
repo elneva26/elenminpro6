@@ -24,8 +24,8 @@ Kelas : **Sistem Informasi A'25**
 - [BAB VI Dummy data pada arrayList](#bab-vi-dummy-data-pada-arraylist)
 - [BAB VII Polymorphism dan Abstraction](#bab-vii-polymorphism-dan-abstraction)
 - [BAB VIII Interface](#bab-viii-interface)
-- [BAB IX JDBC (Java Database Connectivity)](#bab-ix-jdbc (java-database-connecyivity))
-- [BAB X ORM (Object Relational Mapping)](#bab-x-orm (object-relational-mapping))
+- [BAB IX JDBC (Java Database Connectivity)](#bab-ix-jdbc-java-database-connectivity)
+- [BAB X ORM (Object Relational Mapping)](#bab-x-orm-object-relational-mapping)
 - [BAB XI KESIMPULAN](#bab-xi-kesimpulan)
 
 ---
