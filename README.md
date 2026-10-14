@@ -541,6 +541,83 @@ Dengan cara ini seluruh controller memiliki nama method yang seragam, dan contro
 
 ---
 
+## **BAB IX JDBC (Java Database Connectivity)**
+
+### **9.1 Membuat Database**
+
+<img width="500" alt="image" src="https://github.com/user-attachments/assets/8373d224-6961-4425-9f2d-f18c14ca097e" />
+
+----------
+
+<img width="500" alt="image" src="https://github.com/user-attachments/assets/2cb25636-a566-4014-a554-17c7d3c58399" />
+
+
+Sebelum program bisa terhubung ke database, database itu sendiri harus dibuat terlebih dulu. Dalam proyek ini, database bernama db_sistemmanajemencvmpk dibuat untuk menyimpan semua data sistem manajemen CVMPK. Setelah database terbentuk, data awal (dummy data) juga dimasukkan supaya saat fitur tampilkan data dijalankan, sudah ada isinya dan tidak perlu diketik ulang dari awal, agar lebih mudah memastikan apakah koneksi dan fitur baca data sudah berjalan dengan benar.
+
+### **9.2 Koneksi Database**
+
+<img width="500" alt="image" src="https://github.com/user-attachments/assets/d6d47f42-ef15-4751-98e0-3cbbd8aa9b16" />
+
+
+Pada gambar di atas menunjukkan class Koneksi, yaitu class yang bertugas menghubungkan program dengan database db_sistemmanajemencvmpk. Class ini menyimpan alamat database, nama pengguna, dan password MySQL, lalu membuka koneksi ke database saat dibutuhkan. Koneksi tidak dibuat ulang setiap kali ada permintaan, tetapi disimpan dan dipakai kembali, sehingga program bekerja lebih efisien.
+
+
+-> Test Koneksi pada JDBC
+
+<img width="500" alt="image" src="https://github.com/user-attachments/assets/fa0640d7-088b-4c8e-86d0-57f988d01eb8" />
+
+
+-> Test Koneksi pada ORM
+
+<img width="500" alt="image" src="https://github.com/user-attachments/assets/cddf63b5-4cd3-446c-bbe7-2ae16d6b3df0" />
+
+Pada gambar di atas menunjukkan class TestKoneksi pada JDBC dan ORM, yaitu class untuk menguji apakah program sudah terhubung dengan database db_sistemmanajemencvmpk. Class ini memanggil Koneksi.getConnection() lalu mengecek hasilnya. Jika koneksi berhasil, program menampilkan pesan bahwa database siap digunakan. Jika gagal, program menampilkan pesan untuk memeriksa URL, username, password, dan apakah service MySQL sudah menyala.
+
+### **9.3 Import Depedency**
+
+<img width="500" alt="image" src="https://github.com/user-attachments/assets/6cfe9a90-bbe1-4a35-a3db-e88eb8d1de28" />
+
+Pada gambar di atas menunjukkan penambahan dependency di file pom.xml. Dependency ini berisi driver mysql-connector-j, yaitu penerjemah yang membuat program Java bisa berkomunikasi dengan MySQL melalui JDBC, serta driver hibernate-core, yaitu penerjemah yang membuat program Java bisa berkomunikasi dengan MYSQL melalui ORM. Tanpa adanya dependency ini, program tidak tahu cara terhubung ke MySQL, sehingga koneksi akan gagal. 
+
+### **9.4 DAO dan Prepared Statement**
+
+-> Pemasok DAO
+
+<img width="500" alt="image" src="https://github.com/user-attachments/assets/1724afe6-d8cf-4504-af09-dc4f7caf7a4e" />
+
+-> Pengadaan DAO
+
+<img width="500" alt="image" src="https://github.com/user-attachments/assets/2eb014fd-966f-4875-baa2-4ff8de9ae016" />
+
+Pada gambar di atas menunjukkan class DAO (Data Access Object), yaitu tempat menyimpan kode yang khusus mengurus komunikasi dengan database. Di dalamnya terdapat perintah SQL untuk menambah, membaca, mengubah, dan menghapus data pemasok dan pengadaan. Dengan memisahkan perintah SQL ke dalam DAO, bagian lain dari program tidak perlu tahu cara kerja database, serta menunjukkan adanya penerapan PreparedStatement. Cara ini membuat perintah SQL ditulis dengan tanda “?” sebagai tempat nilai, lalu nilainya diisi terpisah menggunakan method seperti setString() atau setInt(). Dengan cara ini, input dari pengguna tidak dianggap sebagai bagian dari perintah SQL, sehingga program terhindar dari SQL Injection, yaitu serangan dengan menyisipkan kode SQL berbahaya lewat input.
+
+
+## **BAB X ORM (Object-Relational Mapping)**
+
+### **10.1 Membuat folder resource**
+
+<img width="500" alt="image" src="https://github.com/user-attachments/assets/16dcf150-6a91-4759-87a5-6157cd979619" />
+
+Pada gambar di atas menunjukkan pembuatan folder resources yang di dalamnya terdapat folder META-INF beserta file persistence.xml. Folder dan file ini berisi konfigurasi penting untuk ORM, yaitu persistence.xml sebagai file pengaturan utama yang mendefinisikan persistence unit serta parameter yang membuat program Java bisa terhubung dan mengelola database secara otomatis melalui framework Hibernate. Tanpa adanya struktur folder dan file konfigurasi ini, program tidak memiliki acuan parameter koneksi untuk ORM, sehingga proses inisialisasi manajemen data objek akan gagal.
+
+### **10.2 Import Dependency**
+
+<img width="500" alt="image" src="https://github.com/user-attachments/assets/391979ae-4392-40ed-8287-339cffef5a4e" />
+
+Pada gambar di atas menunjukkan penambahan dependency di file pom.xml. Dependency ini berisi driver hibernate-core, yaitu penerjemah yang membuat program Java bisa berkomunikasi dengan MySQL melalui ORM. Tanpa dependency ini, program tidak tahu cara terhubung ke MySQL, sehingga koneksi akan gagal. 
+
+
+### **10.3 ORM dan Entity Manager Provider**
+
+<img width="500" alt="image" src="https://github.com/user-attachments/assets/f8a22e36-1305-4301-bcb9-a94a845fe9ea" />
+
+Pada gambar di atas menunjukkan pembuatan kelas EntityManagerProvider yang berada di dalam package model.manager. Kelas ini berfungsi sebagai pengelola utama (entry point) untuk menginisialisasi EntityManagerFactory menggunakan Persistence.createEntityManagerFactory("cvmpkPU") berdasarkan konfigurasi pada file persistence.xml. Kelas ini memastikan proses pembuatan sesi pengelolaan basis data secara objek (object-relational mapping) dapat berjalan dengan aman melalui blok try-catch. Tanpa adanya kelas pengelola ini, program tidak memiliki titik acuan untuk menghasilkan EntityManager yang dibutuhkan dalam menjalankan operasi CRUD berbasis ORM Hibernate.
+
+
+<img width="500" alt="image" src="https://github.com/user-attachments/assets/068873f9-c219-446e-8420-b95445c01941" />
+
+
+Pada gambar di atas menunjukkan pembuatan kelas BarangManager yang berada di dalam package model.manager. Kelas ini berfungsi untuk mengelola dan mengeksekusi operasi basis data secara objek (object-relational mapping) pada entitas barang, seperti method tambah(Barang barang) yang menangani proses penyimpanan data ke database menggunakan EntityManager dari Hibernate. Kelas ini memastikan proses transaksi basis data—mulai dari membuka transaksi (begin), menyimpan objek (persist), melakukan commit, rollback jika terjadi kesalahan, hingga menutup sesi (close)—dapat berjalan dengan aman dan terstruktur melalui blok try-catch-finally. Tanpa adanya kelas pengelola ini, program tidak memiliki komponen untuk menjalankan fungsi CRUD entitas barang secara otomatis menggunakan framework ORM.
 
 ## **BAB IX KESIMPULAN**
 
