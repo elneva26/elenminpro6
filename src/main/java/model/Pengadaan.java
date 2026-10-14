@@ -1,18 +1,37 @@
 package model;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Convert;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.time.format.ResolverStyle;
 
+@Entity
+@Table(name = "pengadaan")
 public class Pengadaan {
 
-    private static final DateTimeFormatter FORMAT_TANGGAL
+    public static final DateTimeFormatter FORMAT_TANGGAL
             = DateTimeFormatter.ofPattern("dd/MM/uuuu").withResolverStyle(ResolverStyle.STRICT);
 
-    private final int idPengadaan;
-    private String tanggal;
+    @Id
+    @Column(name = "id_pengadaan")
+    private int idPengadaan;
+
+    // Di program berupa teks "dd/MM/yyyy", di database berupa DATE (lihat TanggalConverter)
+    @Convert(converter = TanggalConverter.class)
+    @Column(name = "tanggal", nullable = false)
+    public String tanggal;
+
+    @Column(name = "alamat", nullable = false, length = 200)
     private String alamat;
+
+    // Constructor kosong hanya dipakai ORM
+    protected Pengadaan() {
+    }
 
     public Pengadaan(int idPengadaan, String tanggal, String alamat) {
         if (idPengadaan <= 0) {
@@ -43,7 +62,7 @@ public class Pengadaan {
         return tanggal;
     }
 
-    public final void setTanggal(String tanggal) {
+    public void setTanggal(String tanggal) {
         if (tanggal == null || tanggal.trim().isEmpty()) {
             throw new IllegalArgumentException("Tanggal pengadaan tidak boleh kosong!");
         }
@@ -57,7 +76,7 @@ public class Pengadaan {
         return alamat;
     }
 
-    public final void setAlamat(String alamat) {
+    public void setAlamat(String alamat) {
         if (alamat == null || alamat.trim().isEmpty()) {
             throw new IllegalArgumentException("Alamat pengadaan tidak boleh kosong!");
         }

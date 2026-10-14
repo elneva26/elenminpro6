@@ -8,6 +8,7 @@ public class MenuView extends BaseView {
         super(scanner);
     }
 
+    // Pastikan TANPA parameter di dalam kurung ini ()
     public void tampilMenuUtama() {
         judul("SISTEM MANAJEMEN CV MANDIRI PRIMA KREATIF");
         System.out.println("1. Kelola Data Barang");

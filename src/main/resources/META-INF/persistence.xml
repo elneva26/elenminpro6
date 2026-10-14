@@ -1,0 +1,23 @@
+<persistence xmlns="https://jakarta.ee/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="https://jakarta.ee/xml/ns/persistence https://jakarta.ee/xml/ns/persistence/persistence_3_0.xsd" version="3.0">
+<persistence-unit name="cvmpkPU" transaction-type="RESOURCE_LOCAL">
+<!--  Class yang dipetakan ke tabel  -->
+<class>model.Barang</class>
+<class>model.BarangElektronik</class>
+<class>model.BarangNonElektronik</class>
+<class>model.Pemasok</class>
+<class>model.Pengadaan</class>
+<class>model.TanggalConverter</class>
+<exclude-unlisted-classes>true</exclude-unlisted-classes>
+<properties>
+<!--  Koneksi database (sama dengan config/Koneksi.java)  -->
+<property name="jakarta.persistence.jdbc.driver" value="com.mysql.cj.jdbc.Driver"/>
+<property name="jakarta.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/sistemmanajemencvmpk"/>
+<property name="jakarta.persistence.jdbc.user" value="root"/>
+<property name="jakarta.persistence.jdbc.password" value=""/>
+<!--  Hibernate  -->
+<property name="hibernate.hbm2ddl.auto" value="none"/>
+<!--  Ubah menjadi true untuk melihat SQL yang dibuat otomatis oleh ORM  -->
+<property name="hibernate.show_sql" value="false"/>
+</properties>
+</persistence-unit>
+</persistence>

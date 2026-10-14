@@ -1,18 +1,17 @@
 package controller;
 
-import java.util.ArrayList;
+import config.PengadaanDAO; // Mengambil dari package config
 import model.Pengadaan;
 import view.PengadaanView;
 
 public class PengadaanController implements Kelola {
 
-    private final ArrayList<Pengadaan> daftarPengadaan = new ArrayList<>();
+    private final PengadaanDAO dao;
     private final PengadaanView view;
 
-    public PengadaanController(PengadaanView view) {
+    public PengadaanController(PengadaanView view, PengadaanDAO dao) {
         this.view = view;
-
-        daftarPengadaan.add(new Pengadaan(1, "18/09/2026", "Gudang CV MPK"));
+        this.dao = dao;
     }
 
     @Override
@@ -23,18 +22,12 @@ public class PengadaanController implements Kelola {
             view.tampilMenu();
 
             switch (view.pilihMenu()) {
-                case 1 ->
-                    tambah();
-                case 2 ->
-                    tampilkan();
-                case 3 ->
-                    hapus();
-                case 4 ->
-                    update();
-                case 5 ->
-                    kembali = true;
-                default ->
-                    view.pesan("Pilihan tidak valid!");
+                case 1 -> tambah();
+                case 2 -> tampilkan();
+                case 3 -> hapus();
+                case 4 -> update();
+                case 5 -> kembali = true;
+                default -> view.pesan("Pilihan tidak valid!");
             }
         }
     }
@@ -49,64 +42,65 @@ public class PengadaanController implements Kelola {
             return;
         }
 
-        if (cariPengadaan(id) != null) {
-            view.pesan("ID pengadaan sudah digunakan!");
-            return;
-        }
-
-        String tanggal = view.inputTanggal();
-        String alamat = view.inputAlamat();
-
         try {
-            daftarPengadaan.add(new Pengadaan(id, tanggal, alamat));
+            if (dao.cariById(id) != null) {
+                view.pesan("ID pengadaan sudah digunakan!");
+                return;
+            }
+
+            String tanggal = view.inputTanggal();
+            String alamat = view.inputAlamat();
+
+            dao.tambah(new Pengadaan(id, tanggal, alamat));
             view.pesan("Pengadaan baru berhasil ditambahkan!");
         } catch (IllegalArgumentException e) {
             view.pesan(e.getMessage());
+        } catch (Exception e) { // Mengganti DatabaseException dengan Exception umum
+            view.pesan("Kesalahan database: " + e.getMessage());
         }
     }
 
     @Override
     public void tampilkan() {
-        view.tampilDaftar(daftarPengadaan);
+        try {
+            view.tampilDaftar(dao.semua());
+        } catch (Exception e) {
+            view.pesan("Kesalahan database: " + e.getMessage());
+        }
     }
 
     @Override
     public void hapus() {
-        Pengadaan pengadaan = cariPengadaan(view.inputId());
-
-        if (pengadaan == null) {
-            view.pesan("ID pengadaan tidak ditemukan!");
-            return;
+        try {
+            if (dao.hapus(view.inputId())) {
+                view.pesan("Pengadaan berhasil dihapus!");
+            } else {
+                view.pesan("ID pengadaan tidak ditemukan!");
+            }
+        } catch (Exception e) {
+            view.pesan("Kesalahan database: " + e.getMessage());
         }
-
-        daftarPengadaan.remove(pengadaan);
-        view.pesan("Pengadaan berhasil dihapus!");
     }
 
     @Override
     public void update() {
-        Pengadaan pengadaan = cariPengadaan(view.inputId());
-
-        if (pengadaan == null) {
-            view.pesan("ID pengadaan tidak ditemukan!");
-            return;
-        }
-
         try {
+            Pengadaan pengadaan = dao.cariById(view.inputId());
+
+            if (pengadaan == null) {
+                view.pesan("ID pengadaan tidak ditemukan!");
+                return;
+            }
+
             pengadaan.setTanggal(view.inputTanggalBaru());
             pengadaan.setAlamat(view.inputAlamatBaru());
+
+            dao.update(pengadaan);
             view.pesan("Data pengadaan berhasil diperbarui!");
         } catch (IllegalArgumentException e) {
             view.pesan(e.getMessage());
+        } catch (Exception e) {
+            view.pesan("Kesalahan database: " + e.getMessage());
         }
-    }
-
-    private Pengadaan cariPengadaan(int idPengadaan) {
-        for (Pengadaan pengadaan : daftarPengadaan) {
-            if (pengadaan.getIdPengadaan() == idPengadaan) {
-                return pengadaan;
-            }
-        }
-        return null;
     }
 }

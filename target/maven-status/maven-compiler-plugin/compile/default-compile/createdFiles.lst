@@ -1,3 +1,13 @@
+model\TanggalConverter.class
+config\TestKoneksi.class
+model\Pengadaan.class
+config\TestKoneksiOrm.class
+config\PengadaanDAO.class
+view\BarangView.class
+model\manager\BarangManager.class
+view\PengadaanView.class
+view\EntitasView.class
+model\manager\EntityManagerProvider.class
 model\Pemasok.class
 view\MenuView.class
 controller\PengadaanController.class
@@ -8,10 +18,8 @@ model\Barang.class
 model\BarangElektronik.class
 view\BaseView.class
 main\SistemmanajemenCVMPK.class
-model\Pengadaan.class
 view\PemasokView.class
-view\BarangView.class
+config\Koneksi.class
 controller\Kelola.class
-view\PengadaanView.class
+config\PemasokDAO.class
 controller\MenuController.class
-view\EntitasView.class

@@ -1,8 +1,19 @@
 package model;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.DiscriminatorValue;
+import jakarta.persistence.Entity;
+
+@Entity
+@DiscriminatorValue("ELEKTRONIK")
 public class BarangElektronik extends Barang {
 
+    @Column(name = "garansi", length = 50)
     private String garansi;
+
+    // Constructor kosong hanya dipakai ORM
+    protected BarangElektronik() {
+    }
 
     public BarangElektronik(int idBarang, String nama, int stok, String garansi) {
         super(idBarang, nama, stok);

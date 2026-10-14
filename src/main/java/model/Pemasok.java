@@ -1,11 +1,30 @@
 package model;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+
+@Entity
+@Table(name = "pemasok")
 public class Pemasok {
 
-    private final int idPemasok;
+    @Id
+    @Column(name = "id_pemasok")
+    private int idPemasok;
+
+    @Column(name = "nama", nullable = false, length = 100)
     private String nama;
+
+    @Column(name = "alamat", nullable = false, length = 200)
     private String alamat;
+
+    @Column(name = "no_telepon", nullable = false, length = 20)
     private String noTelepon;
+
+    // Constructor kosong hanya dipakai ORM
+    protected Pemasok() {
+    }
 
     public Pemasok(int idPemasok, String nama, String alamat, String noTelepon) {
         if (idPemasok <= 0) {
@@ -29,7 +48,7 @@ public class Pemasok {
         return nama;
     }
 
-    public final void setNama(String nama) {
+    public void setNama(String nama) {
         if (nama == null || nama.trim().isEmpty()) {
             throw new IllegalArgumentException("Nama pemasok tidak boleh kosong!");
         }
@@ -40,7 +59,7 @@ public class Pemasok {
         return alamat;
     }
 
-    public final void setAlamat(String alamat) {
+    public void setAlamat(String alamat) {
         if (alamat == null || alamat.trim().isEmpty()) {
             throw new IllegalArgumentException("Alamat pemasok tidak boleh kosong!");
         }
@@ -51,7 +70,7 @@ public class Pemasok {
         return noTelepon;
     }
 
-    public final void setNoTelepon(String noTelepon) {
+    public void setNoTelepon(String noTelepon) {
         if (noTelepon == null || noTelepon.trim().isEmpty()) {
             throw new IllegalArgumentException("No telepon tidak boleh kosong!");
         }

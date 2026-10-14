@@ -1,18 +1,17 @@
 package controller;
 
-import java.util.ArrayList;
+import config.PemasokDAO; // Mengambil dari package config
 import model.Pemasok;
 import view.PemasokView;
 
 public class PemasokController implements Kelola {
 
-    private final ArrayList<Pemasok> daftarPemasok = new ArrayList<>();
+    private final PemasokDAO dao;
     private final PemasokView view;
 
-    public PemasokController(PemasokView view) {
+    public PemasokController(PemasokView view, PemasokDAO dao) {
         this.view = view;
-
-        daftarPemasok.add(new Pemasok(1, "PT Sumber Elektronik", "Samarinda", "081234567890"));
+        this.dao = dao;
     }
 
     @Override
@@ -23,18 +22,12 @@ public class PemasokController implements Kelola {
             view.tampilMenu();
 
             switch (view.pilihMenu()) {
-                case 1 ->
-                    tambah();
-                case 2 ->
-                    tampilkan();
-                case 3 ->
-                    hapus();
-                case 4 ->
-                    update();
-                case 5 ->
-                    kembali = true;
-                default ->
-                    view.pesan("Pilihan tidak valid!");
+                case 1 -> tambah();
+                case 2 -> tampilkan();
+                case 3 -> hapus();
+                case 4 -> update();
+                case 5 -> kembali = true;
+                default -> view.pesan("Pilihan tidak valid!");
             }
         }
     }
@@ -49,66 +42,67 @@ public class PemasokController implements Kelola {
             return;
         }
 
-        if (cariPemasok(id) != null) {
-            view.pesan("ID pemasok sudah digunakan!");
-            return;
-        }
-
-        String nama = view.inputNama();
-        String alamat = view.inputAlamat();
-        String noTelepon = view.inputNoTelepon();
-
         try {
-            daftarPemasok.add(new Pemasok(id, nama, alamat, noTelepon));
+            if (dao.cariById(id) != null) {
+                view.pesan("ID pemasok sudah digunakan!");
+                return;
+            }
+
+            String nama = view.inputNama();
+            String telepon = view.inputNoTelepon(); // Disesuaikan dengan view
+            String alamat = view.inputAlamat();
+
+            dao.tambah(new Pemasok(id, nama, telepon, alamat));
             view.pesan("Pemasok baru berhasil ditambahkan!");
         } catch (IllegalArgumentException e) {
             view.pesan(e.getMessage());
+        } catch (Exception e) { // Menggunakan Exception umum menggantikan DatabaseException
+            view.pesan("Kesalahan database: " + e.getMessage());
         }
     }
 
     @Override
     public void tampilkan() {
-        view.tampilDaftar(daftarPemasok);
+        try {
+            view.tampilDaftar(dao.semua());
+        } catch (Exception e) {
+            view.pesan("Kesalahan database: " + e.getMessage());
+        }
     }
 
     @Override
     public void hapus() {
-        Pemasok pemasok = cariPemasok(view.inputId());
-
-        if (pemasok == null) {
-            view.pesan("ID pemasok tidak ditemukan!");
-            return;
+        try {
+            if (dao.hapus(view.inputId())) {
+                view.pesan("Pemasok berhasil dihapus!");
+            } else {
+                view.pesan("ID pemasok tidak ditemukan!");
+            }
+        } catch (Exception e) {
+            view.pesan("Kesalahan database: " + e.getMessage());
         }
-
-        daftarPemasok.remove(pemasok);
-        view.pesan("Pemasok berhasil dihapus!");
     }
 
     @Override
     public void update() {
-        Pemasok pemasok = cariPemasok(view.inputId());
-
-        if (pemasok == null) {
-            view.pesan("ID pemasok tidak ditemukan!");
-            return;
-        }
-
         try {
+            Pemasok pemasok = dao.cariById(view.inputId());
+
+            if (pemasok == null) {
+                view.pesan("ID pemasok tidak ditemukan!");
+                return;
+            }
+
             pemasok.setNama(view.inputNamaBaru());
+            pemasok.setNoTelepon(view.inputNoTeleponBaru()); // Menggunakan inputTelepon() sesuai view
             pemasok.setAlamat(view.inputAlamatBaru());
-            pemasok.setNoTelepon(view.inputNoTeleponBaru());
+
+            dao.update(pemasok);
             view.pesan("Data pemasok berhasil diperbarui!");
         } catch (IllegalArgumentException e) {
             view.pesan(e.getMessage());
+        } catch (Exception e) {
+            view.pesan("Kesalahan database: " + e.getMessage());
         }
-    }
-
-    private Pemasok cariPemasok(int idPemasok) {
-        for (Pemasok pemasok : daftarPemasok) {
-            if (pemasok.getIdPemasok() == idPemasok) {
-                return pemasok;
-            }
-        }
-        return null;
     }
 }

@@ -1,11 +1,13 @@
 package controller;
 
 import java.util.Scanner;
+import model.manager.BarangManager;
+import config.PemasokDAO;    // Menggunakan PemasokDAO dari config
+import config.PengadaanDAO;  // Menggunakan PengadaanDAO dari config
 import view.BarangView;
 import view.MenuView;
 import view.PemasokView;
 import view.PengadaanView;
-
 
 public class MenuController {
 
@@ -16,9 +18,11 @@ public class MenuController {
 
     public MenuController(Scanner scanner) {
         view = new MenuView(scanner);
-        kelolaBarang = new BarangController(new BarangView(scanner));
-        kelolaPemasok = new PemasokController(new PemasokView(scanner));
-        kelolaPengadaan = new PengadaanController(new PengadaanView(scanner));
+        
+        // Inisialisasi menggunakan BarangManager (ORM) dan DAO JDBC dari config
+        kelolaBarang = new BarangController(new BarangView(scanner), new BarangManager());
+        kelolaPemasok = new PemasokController(new PemasokView(scanner), new PemasokDAO());
+        kelolaPengadaan = new PengadaanController(new PengadaanView(scanner), new PengadaanDAO());
     }
 
     public void jalankan() {
@@ -28,18 +32,14 @@ public class MenuController {
             view.tampilMenuUtama();
 
             switch (view.pilihMenu()) {
-                case 1 ->
-                    kelolaBarang.jalankanMenu();
-                case 2 ->
-                    kelolaPemasok.jalankanMenu();
-                case 3 ->
-                    kelolaPengadaan.jalankanMenu();
+                case 1 -> kelolaBarang.jalankanMenu();
+                case 2 -> kelolaPemasok.jalankanMenu();
+                case 3 -> kelolaPengadaan.jalankanMenu();
                 case 4 -> {
                     berjalan = false;
                     view.tampilKeluar();
                 }
-                default ->
-                    view.pesan("Menu tidak tersedia");
+                default -> view.pesan("Menu tidak tersedia");
             }
         }
     }
