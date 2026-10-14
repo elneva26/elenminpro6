@@ -1,8 +1,3 @@
-Berikut adalah hasil penyesuaian file **`README.md`** untuk **Mini Project 4**. Seluruh penjelasan materi Pemrograman Berorientasi Objek (PBO) dari laporan Minpro 3 Anda (seperti MVC, *Encapsulation*, *Inheritance*, *Polymorphism*, *Abstraction*, *Interface*, dan validasi input) tetap dipertahankan secara utuh, namun telah diperbarui pada bagian penyimpanan data untuk mengakomodasi ketentuan Minpro 4, yaitu **Koneksi Database JDBC DAO**, **Dummy data awal via file `.sql**`, serta **Nilai Tambah Implementasi Framework ORM (Hibernate)**.
-
-Anda dapat langsung menyalin (*copy-paste*) kode Markdown di bawah ini ke dalam file `README.md` di repository GitHub Anda:
-
-```markdown
 # LAPORAN MINI PROJECT 4 PEMROGRAMAN BERORIENTASI OBJEK
 
 ## SISTEM MANAJEMEN CV MANDIRI PRIMA KREATIF
