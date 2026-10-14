@@ -1,3 +1,8 @@
+Berikut adalah hasil penyesuaian file **`README.md`** untuk **Mini Project 4**. Seluruh penjelasan materi Pemrograman Berorientasi Objek (PBO) dari laporan Minpro 3 Anda (seperti MVC, *Encapsulation*, *Inheritance*, *Polymorphism*, *Abstraction*, *Interface*, dan validasi input) tetap dipertahankan secara utuh, namun telah diperbarui pada bagian penyimpanan data untuk mengakomodasi ketentuan Minpro 4, yaitu **Koneksi Database JDBC DAO**, **Dummy data awal via file `.sql**`, serta **Nilai Tambah Implementasi Framework ORM (Hibernate)**.
+
+Anda dapat langsung menyalin (*copy-paste*) kode Markdown di bawah ini ke dalam file `README.md` di repository GitHub Anda:
+
+```markdown
 # LAPORAN MINI PROJECT 4 PEMROGRAMAN BERORIENTASI OBJEK
 
 ## SISTEM MANAJEMEN CV MANDIRI PRIMA KREATIF
@@ -138,3 +143,69 @@ Poin penerapan encapsulation:
 **Barang** adalah superclass, sedangkan **BarangElektronik** dan **BarangNonElektronik** adalah subclass. Atribut umum berupa ID barang, nama, dan stok diletakkan pada superclass barang, sementara atribut khusus (garansi dan kategori) berada di masing-masing subclass.
 
 Inheritance juga dipakai pada package view:
+
+```
+
+BaseView (abstract)
+├── MenuView
+└── EntitasView (abstract)
+├── BarangView
+├── PemasokView
+└── PengadaanView
+
+```
+
+---
+
+## **BAB VI KONEKSI DATABASE, JDBC DAO & DUMMY DATA SQL**
+
+Pada Mini Project 4, penyimpanan data beralih dari memori sementara (*ArrayList*) ke **Database MySQL** (`sistemmanajemencvmpk`). 
+
+### **6.1 Implementasi JDBC DAO dan Prepared Statement**
+Modul **Pemasok** (`config.PemasokDAO`) dan **Pengadaan** (`config.PengadaanDAO`) dihubungkan ke database menggunakan JDBC murni:
+- Memanfaatkan *Prepared Statement* (`PreparedStatement`) untuk mengeksekusi query SQL secara aman dan mencegah *SQL Injection*.
+- Menggunakan blok *try-with-resources* untuk memastikan objek koneksi (`Connection`) dan pernyataan SQL ditutup dengan aman setelah operasi selesai.
+
+### **6.2 Dummy Data Awal via File `.sql`**
+Sesuai ketentuan, data awal (*dummy data*) tidak diisikan melalui baris kode program Java, melainkan diimpor langsung ke dalam database melalui file skrip **`sistemmanajemencvmpk.sql`**. Hal ini memastikan ketika aplikasi dijalankan dan fitur *Read* (Tampilkan) dipilih, data langsung tersedia di layar tanpa harus melakukan input manual terlebih dahulu.
+
+---
+
+## **BAB VII POLYMORPHISM DAN ABSTRACTION**
+
+### **7.1 Abstraction**
+
+#### Abstract class
+- `Barang` (`model/Barang.java`): Kerangka umum barang.
+- `BaseView` (`view/BaseView.java`): Kerangka semua View (garis, judul, pesan, dan pembacaan input).
+- `EntitasView<T>` (`view/EntitasView.java`): Kerangka View untuk satu jenis data.
+
+#### Abstract method
+Method tanpa isi yang wajib diimplementasikan oleh subclass, seperti pada `Barang`, `BarangElektronik`, `BarangNonElektronik`, dan package `View`.
+
+### **7.2 Polymorphism: Overriding & Overloading**
+- **Overriding**: Digunakan pada subclass entitas dan view untuk menyesuaikan perilaku spesifik (seperti `getJenis()`, `tampilDetail()`).
+- **Overloading**: Diterapkan pada fungsi pencarian barang serta berbagai metode pembacaan input di `BaseView` dengan parameter yang berbeda.
+
+---
+
+## **BAB VIII INTERFACE & NILAI TAMBAH ORM**
+
+### **8.1 Penerapan Interface `Kelola`**
+Interface `Kelola` adalah kontrak standar yang wajib dipenuhi setiap controller data (`BarangController`, `PemasokController`, `PengadaanController`), sehingga `MenuController` dapat memanggil operasi pengelolaan data secara seragam.
+
+### **8.2 Nilai Tambah: Implementasi Framework ORM (Hibernate / JPA)**
+Sebagai **Nilai Tambah** pada proyek ini, entitas **Barang** dikelola menggunakan **Framework ORM Hibernate (v7.4.5.Final)**:
+- **Konfigurasi `persistence.xml`**: Menghubungkan entitas `Barang`, `BarangElektronik`, dan `BarangNonElektronik` ke *persistence unit* `cvmpkPU`.
+- **`EntityManagerProvider`**: Berperan sebagai pengelola *EntityManagerFactory* dan titik masuk (*entry point*) ORM di package `model.manager`.
+- **`BarangManager`**: Menangani operasi CRUD secara objek menggunakan method bawaan JPA seperti `em.persist()`, `em.find()`, `em.remove()`, serta query JPQL (`SELECT b FROM Barang b`) tanpa menulis sintaks SQL manual secara langsung.
+
+---
+
+## **BAB IX KESIMPULAN**
+
+Program Sistem Manajemen CV Mandiri Prima Kreatif merupakan aplikasi berbasis Java yang digunakan untuk mengelola data barang, pemasok, dan pengadaan dengan menerapkan konsep Pemrograman Berorientasi Objek (PBO) secara komprehensif.
+
+Pada pengembangan tahap lanjut ini, program berhasil diintegrasikan dengan **Database MySQL** menggunakan dua pendekatan arsitektur akses data: **JDBC Prepared Statement & DAO** untuk entitas Pemasok & Pengadaan, serta **Framework ORM Hibernate** sebagai nilai tambah untuk entitas Barang. Dengan pemisahan pola MVC, validasi input berlapis, penanganan *exception*, serta penyediaan data awal melalui file `.sql`, aplikasi menjadi jauh lebih profesional, terstruktur, aman, dan siap digunakan untuk pengelolaan data inventaris secara nyata.
+
+```
