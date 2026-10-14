@@ -1,6 +1,6 @@
 # LAPORAN MINI PROJECT 4 PEMROGRAMAN BERORIENTASI OBJEK
 
-## SISTEM MANAJEMEN CV MANDIRI PRIMA KREATIF (HYBRID ORM & JDBC)
+## SISTEM MANAJEMEN CV MANDIRI PRIMA KREATIF
 
 ---
 
@@ -19,9 +19,9 @@ Kelas : **Sistem Informasi A'25**
 - [BAB III Alur Program](#bab-iii-alur-program)
 - [BAB IV Validasi Input](#bab-iv-validasi-input)
 - [BAB V Encapsulation dan Inheritance](#bab-v-encapsulation-dan-inheritance)
-- [BAB VI Koneksi Database & Penyimpanan Data (Hybrid)](#bab-vi-koneksi-database--penyimpanan-data-hybrid)
+- [BAB VI Koneksi Database, JDBC DAO & Dummy Data SQL](#bab-vi-koneksi-database-jdbc-dao--dummy-data-sql)
 - [BAB VII Polymorphism dan Abstraction](#bab-vii-polymorphism-dan-abstraction)
-- [BAB VIII Interface & Arsitektur Akses Data](#bab-viii-interface--arsitektur-akses-data)
+- [BAB VIII Interface & Nilai Tambah ORM](#bab-viii-interface--nilai-tambah-orm)
 - [BAB IX Kesimpulan](#bab-ix-kesimpulan)
 
 ---
@@ -30,37 +30,50 @@ Kelas : **Sistem Informasi A'25**
 
 ### **1.1 Deskripsi Singkat Program**
 
-Sistem Manajemen CV Mandiri Prima Kreatif adalah program berbasis Java (CLI) yang dikembangkan untuk mengelola data pada CV Mandiri Prima Kreatif yang bergerak di bidang elektronik dan pengadaan barang.
+Sistem Manajemen CV Mandiri Prima Kreatif adalah program berbasis Java untuk membantu mengelola data pada CV Mandiri Prima Kreatif yang bergerak di bidang elektronik dan pengadaan barang.
 
-Program mengelola tiga jenis entitas data, yaitu **Barang** (Elektronik & Non-Elektronik), **Pemasok**, dan **Pengadaan**, yang dilengkapi dengan fungsionalitas CRUD (*Create, Read, Update, Delete*) serta fitur pencarian khusus pada data barang. 
-
-Pada Mini Project 4 ini, program menerapkan **Arsitektur Hibrida (*Hybrid Architecture*)** dalam mengakses database MySQL:
-1. **ORM (Object-Relational Mapping / Hibernate & JPA)** digunakan secara otomatis untuk mengelola entitas **Barang** melalui *EntityManager* di package `model.manager`.
-2. **JDBC Prepared Statement** murni digunakan untuk mengelola entitas **Pemasok** dan **Pengadaan** melalui package `config`.
+Program mengelola tiga jenis data, yaitu data barang, data pemasok, dan data pengadaan, dengan konsep CRUD (Create, Read, Update, Delete). Khusus data barang, tersedia fitur tambahan Cari Barang (berdasarkan ID atau nama). Pada Mini Project 4 ini, penyimpanan data yang sebelumnya menggunakan *"ArrayList"* telah ditingkatkan menjadi **penyimpanan permanen berbasis Database MySQL**, dengan menerapkan pendekatan **JDBC DAO (Prepared Statement)** untuk data Pemasok & Pengadaan, serta penerapan **Framework ORM (Hibernate/JPA)** sebagai *Nilai Tambah* untuk data Barang.
 
 ### **1.2 Tujuan**
 
 Sistem Manajemen CV Mandiri Prima Kreatif dirancang dengan tujuan sebagai berikut:
 
 - Membantu mengelola data barang, pemasok, dan pengadaan secara terstruktur dengan integrasi database relasional MySQL.
-- Menerapkan konsep Pemrograman Berorientasi Objek (PBO) secara komprehensif, yaitu *encapsulation*, *inheritance*, *polymorphism* (overriding & overloading), dan *abstraction* (*abstract class* & *abstract method*).
-- Menerapkan pola arsitektur **MVC (Model-View-Controller)** yang dipadukan dengan pemisahan lapisan akses data berbasis **JDBC** dan **ORM Hibernate**.
-- Menerapkan interface sebagai kontrak penyeragam controller serta memanfaatkan *EntityManager* sebagai titik masuk (*entry point*) ORM.
-- Memastikan integritas data tetap terjaga melalui validasi input berlapis di *View* dan aturan validasi pada *Model*.
+- Memudahkan proses tambah, tampil, update, hapus, dan cari data (fungsi pencarian khusus pada data barang) terdapat dalam sistem.
+- Menerapkan konsep pemrograman berorientasi objek, yaitu encapsulation, inheritance, polymorphism (overriding dan overloading), dan abstraction (abstract class dan abstract method) dalam program.
+- Menerapkan struktur proyek MVC (Model, View, Controller) yang dipadukan dengan arsitektur akses data berbasis JDBC DAO dan ORM.
+- Menerapkan interface sebagai kontrak yang menyeragamkan seluruh controller data.
+- Memastikan data yang dimasukkan sesuai melalui proses validasi input pada view dan model.
 
 ### **1.3 Alur Singkat**
-Alur program dimulai dari kelas utama `SistemmanajemenCVMPK` yang menginisialisasi `MenuController` untuk menampilkan menu utama secara interaktif. Pengguna dapat memilih menu Kelola Data Barang, Kelola Data Pemasok, Kelola Data Pengadaan, atau Keluar.
+Alur program dimulai dengan menampilkan menu utama Sistem Manajemen CV Mandiri Prima Kreatif, yaitu kelola data barang, kelola data pemasok, kelola data pengadaan, dan keluar. Menu utama diatur oleh MenuController, dimana menu tersebut meneruskan pilihan pengguna ke controller data yang sesuai. Menu utama akan terus ditampilkan sampai pengguna memilih menu keluar. Setiap menu kelola data memiliki sub-menu sendiri yang juga berulang sampai pengguna memilih kembali.
 
-- **Kelola Data Barang (ORM Hibernate)**: Menggunakan `BarangManager` untuk memproses penyimpanan, pengambilan, pembaruan, dan penghapusan data secara objek melalui Hibernate tanpa query SQL manual. Pengguna dapat menambah barang (Elektronik dengan garansi atau Non-Elektronik dengan kategori), menampilkan, menghapus, mengubah stok, serta mencari barang berdasarkan ID atau nama.
-- **Kelola Data Pemasok (JDBC)**: Menggunakan `PemasokDAO` berbasis JDBC *Prepared Statement* di package `config`. Memungkinkan penambahan data pemasok (dengan validasi nomor telepon khusus angka), penampilan, penghapusan, dan pembaruan data.
-- **Kelola Data Pengadaan (JDBC)**: Menggunakan `PengadaanDAO` berbasis JDBC *Prepared Statement* di package `config`. Memungkinkan pengelolaan data pengadaan dengan format tanggal `dd/MM/yyyy` yang divalidasi secara ketat.
-- **Validasi & Penanganan Exception**: Setiap input melalui *View* divalidasi agar sesuai tipe datanya, dan aturan bisnis pada *Model* dijaga menggunakan `IllegalArgumentException` yang ditangkap dan ditampilkan melalui pesan *View*.
+-> Pada menu kelola data barang, pengguna dapat memilih menu tambah, tampilkan, hapus, update stok, cari barang dan kembali. 
+
+- Saat menambahkan barang, pengguna memasukkan ID barang, nama barang, dan stok, lalu memilih jenis barang, yaitu Barang Elektronik atau Barang Non-Elektronik.
+- Barang elektronik memiliki data tambahan berupa garansi, sedangkan barang non-elektronik memiliki data tambahan berupa kategori.
+- Lalu ID barang tidak boleh sama dengan ID yang sudah ada, dan pengguna dapat membatalkan penambahan dengan memasukkan angka 0 pada ID.
+- Data barang dikelola secara otomatis menggunakan **ORM Hibernate** (`model.manager.BarangManager`) dan langsung disimpan ke database.
+- Pengguna juga dapat menghapus barang berdasarkan ID, memperbarui stok barang, serta mencari barang berdasarkan ID atau berdasarkan nama.
+
+-> Pada menu kelola data pemasok, pengguna dapat menambahkan data pemasok dengan memasukkan ID pemasok, nama pemasok, alamat, dan nomor telepon yang hanya boleh berisi angka. Pengelolaan data dilakukan menggunakan **JDBC Prepared Statement & DAO** (`config.PemasokDAO`).
+- Data pemasok yang telah tersimpan dapat ditampilkan, dihapus berdasarkan ID, serta diperbarui (nama, alamat, dan nomor telepon).
+
+-> Pada menu kelola data pengadaan, pengguna dapat menambahkan data pengadaan dengan memasukkan ID pengadaan, tanggal pengadaan dengan format dd/MM/yyyy, dan alamat pengadaan. Pengelolaan data dilakukan menggunakan **JDBC Prepared Statement & DAO** (`config.PengadaanDAO`).
+- Data pengadaan yang telah tersimpan dapat ditampilkan, dihapus berdasarkan ID, serta diperbarui (tanggal dan alamat).
+
+-> Setiap proses input dilengkapi dengan validasi dua lapis, yaitu; 
+- Lapis pertama ada di view, yang memastikan input tidak kosong, berupa angka jika yang diminta angka, dan memenuhi nilai minimal, lalu jika terdapat input yang salah, sistem akan langsung meminta input ulang sampai benar.
+- Lapis kedua ada di model, yang menjaga aturan data seperti stok tidak boleh kurang dari 0, nomor telepon hanya angka (tidak boleh huruf atau simbol), dan tanggal harus sesuai format penulisan tanggal yaitu dd/MM/yyyy.
+Jika aturan pada program dilanggar oleh pengguna, maka model akan melempar IllegalArgumentException dan controller menampilkan pesannya melalui view.
+
+Dalam setiap proses, pembagian tugas mengikuti pola MVC, di mana controller meminta input kepada view, membuat atau mengubah objek model, lalu menyimpannya secara permanen ke Database MySQL, setelah itu meminta view menampilkan hasilnya kepada pengguna.
 
 --------------
 
 ## **BAB II STRUKTUR PACKAGE**
 
-Program menerapkan struktur **MVC (Model-View-Controller)** yang diperkaya dengan package khusus **`config`** untuk koneksi dan JDBC, serta sub-package **`model.manager`** untuk manajemen ORM.
+Program menerapkan struktur **MVC (Model-View-Controller)** dengan tambahan package **`config`** dan sub-package **`model.manager`** untuk menangani interaksi database.
 
 | Package | Class | Tugas |
 |---|---|---|
@@ -75,89 +88,53 @@ Program menerapkan struktur **MVC (Model-View-Controller)** yang diperkaya denga
 
 ## **BAB III ALUR PROGRAM**
 
-### **3.1 Alur Pemanggilan Sistem Hibrida (ORM & JDBC)**
+### **3.1 Alur Pemanggilan MVC & Database**
 
-- **Alur Tambah Barang (ORM)**: `BarangController` meminta input ke `BarangView` -> membuat objek `BarangElektronik`/`BarangNonElektronik` -> memanggil `BarangManager.tambah()` -> `EntityManager` melakukan `em.persist()` ke database secara otomatis.
-- **Alur Tambah Pemasok/Pengadaan (JDBC)**: `PemasokController` / `PengadaanController` meminta input ke *View* -> memanggil `PemasokDAO` / `PengadaanDAO` di package `config` -> mengeksekusi *Prepared Statement* SQL melalui koneksi `Koneksi.getConnection()`.
+Contoh alur pada saat **Tambah Barang**:
 
-### **3.2 Menu Utama**
+1. `BarangController.tambah()` meminta input ID, nama, stok, dan jenis ke `BarangView`.
+2. `BarangView` membaca input dan memvalidasinya sampai valid.
+3. `BarangController` membuat objek `BarangElektronik` atau `BarangNonElektronik` (Model).
+4. Model memeriksa aturan datanya. Jika dilanggar, Model melempar `IllegalArgumentException`.
+5. `BarangController` memanggil `BarangManager` untuk menyimpan objek secara permanen ke database melalui ORM Hibernate.
 
-Saat program dijalankan, konsol menampilkan menu utama Sistem Manajemen CV Mandiri Prima Kreatif secara berulang hingga pengguna memilih opsi keluar.
-
-### **3.4 Kelola Data Barang (ORM Hibernate)**
-- Menyediakan menu Tambah, Tampilkan, Hapus, Update Stok, Cari Barang, dan Kembali.
-- Penambahan barang membedakan jenis Elektronik (dengan garansi) dan Non-Elektronik (dengan kategori).
-- Data ditarik langsung dari database menggunakan Hibernate ORM.
-
-### **3.5 Kelola Data Pemasok (JDBC)**
-- Menyediakan menu Tambah, Tampilkan, Hapus, Update, dan Kembali.
-- Memproses data pemasok (ID, nama, alamat, no telepon berupa angka) menggunakan query SQL *Prepared Statement*.
-
-### **3.6 Kelola Data Pengadaan (JDBC)**
-- Menyediakan menu Tambah, Tampilkan, Hapus, Update, dan Kembali.
-- Memproses data pengadaan dengan format tanggal `dd/MM/yyyy` menggunakan JDBC.
+Program dijalankan melalui class "SistemmanajemenCVMPK" yang berada pada package "main".
 
 ---
 
 ## **BAB IV VALIDASI INPUT**
 
 Validasi dilakukan pada **dua lapis**:
-1. **View** (`BaseView`): memastikan input tidak kosong, sesuai tipe data, dan memenuhi syarat minimal.
-2. **Model**: menjaga aturan data. Jika dilanggar, melempar `IllegalArgumentException` yang ditangkap oleh *Controller* dan ditampilkan lewat *View*.
+
+1. **View** (`BaseView`): memastikan input tidak kosong, berupa angka, dan memenuhi nilai minimal. Input diulang sampai valid.
+2. **Model**: menjaga aturan data. Jika dilanggar, Model melempar `IllegalArgumentException` dan Controller menampilkan pesannya lewat View.
 
 | Data | Aturan |
 |---|---|
-| ID (barang, pemasok, pengadaan) | Wajib diisi, harus angka, tidak boleh duplikat |
-| Nama, alamat, garansi, kategori | Tidak boleh kosong |
-| Stok | Harus angka, tidak boleh kurang dari 0 |
-| No telepon | Wajib diisi, hanya berupa angka |
-| Tanggal pengadaan | Format `dd/MM/yyyy`, divalidasi ketat secara kalender |
+| ID (barang, pemasok, pengadaan) | wajib diisi, harus angka, tidak boleh duplikat, ID pada update/hapus minimal 1 |
+| Nama, alamat, garansi, kategori | tidak boleh kosong |
+| Stok | harus angka, tidak boleh kurang dari 0 |
+| Jenis barang | hanya boleh 1 atau 2 |
+| No telepon | tidak boleh kosong, hanya angka |
+| Tanggal pengadaan | tidak boleh kosong, format `dd/MM/yyyy`, dan tanggalnya harus valid (31/02/2026 akan ditolak) |
+| Menu | harus angka dan sesuai pilihan yang tersedia |
 
 ---
 
 ## **BAB V ENCAPSULATION DAN INHERITANCE**
 
 ### **5.1 Encapsulation**
-Semua atribut pada class Model dibuat `private` dan diakses melalui getter/setter yang sekaligus memvalidasi nilai data sebelum disimpan, menjaga integritas objek dari akses luar yang tidak sah.
+
+Semua atribut pada class Model dibuat "private" dan diakses melalui getter/setter. Setter juga berfungsi memvalidasi data sebelum disimpan.
+
+Poin penerapan encapsulation:
+- Atribut "private", sehingga tidak dapat diubah langsung dari class lain.
+- ID dibuat "final" dan tidak punya setter, karena ID tidak boleh berubah setelah objek dibuat.
+- Setter yang dibuka ("public") hanya untuk data yang memang boleh diubah.
+- Konsep yang sama diterapkan pada "Pemasok" dan "Pengadaan".
 
 ### **5.2 Inheritance**
-- **Barang** bertindak sebagai *superclass* abstrak bagi **BarangElektronik** dan **BarangNonElektronik**.
-- Pewarisan juga diterapkan pada package *View* melalui hierarki **`BaseView`** dan **`EntitasView<T>`**.
 
----
+**Barang** adalah superclass, sedangkan **BarangElektronik** dan **BarangNonElektronik** adalah subclass. Atribut umum berupa ID barang, nama, dan stok diletakkan pada superclass barang, sementara atribut khusus (garansi dan kategori) berada di masing-masing subclass.
 
-## **BAB VI KONEKSI DATABASE & PENYIMPANAN DATA (HYBRID)**
-
-Berbeda dengan versi sebelumnya yang menggunakan penyimpanan memori sementara (*ArrayList*), pada Mini Project 4 ini seluruh data disimpan secara permanen di dalam **Database MySQL** (`sistemmanajemencvmpk`), dengan pembagian teknologi:
-- **ORM Hibernate (`cvmpkPU`)**: Mengelola pemetaan tabel `barang`, `barang_elektronik`, dan `barang_non_elektronik`.
-- **JDBC**: Mengelola tabel `pemasok` dan `pengadaan` menggunakan koneksi langsung dan *PreparedStatement*.
-
----
-
-## **BAB VII POLYMORPHISM DAN ABSTRACTION**
-
-### **7.1 Abstraction**
-- **Abstract Class**: Diterapkan pada `Barang`, `BaseView`, dan `EntitasView<T>`.
-- **Abstract Method**: Dideklarasikan pada class abstrak dan wajib diimplementasikan oleh seluruh *subclass*-nya.
-
-### **7.2 Polymorphism: Overriding & Overloading**
-- **Overriding**: Digunakan pada *subclass* entitas dan *view* untuk menyesuaikan perilaku spesifik (seperti `getJenis()`, `tampilDetail()`).
-- **Overloading**: Diterapkan pada method pencarian dan fungsi pembacaan input di *View* dengan parameter yang berbeda.
-
----
-
-## **BAB VIII INTERFACE & ARSITEKTUR AKSES DATA**
-
-### **8.1 Penerapan Interface `Kelola`**
-Interface `Kelola` berfungsi sebagai kontrak standar yang wajib diimplementasikan oleh seluruh *controller* (`BarangController`, `PemasokController`, `PengadaanController`), sehingga `MenuController` dapat menjalankan operasi menu secara seragam tanpa terikat pada detail teknis masing-masing entitas.
-
-### **8.2 Penerapan Titik Masuk ORM (`EntityManagerProvider`)**
-Sebagai bagian dari nilai tambah arsitektur, pengelolaan *EntityManager* dipusatkan pada package `model.manager` melalui `EntityManagerProvider` guna menjamin siklus hidup koneksi ORM terkelola dengan aman dan bersih.
-
----
-
-## **BAB IX KESIMPULAN**
-
-Program Sistem Manajemen CV Mandiri Prima Kreatif berhasil dikembangkan dengan menerapkan konsep Pemrograman Berorientasi Objek (PBO) serta arsitektur **Hibrida (*Hybrid Architecture*)** yang menggabungkan **ORM Hibernate** (untuk entitas Barang di package `model.manager`) dan **JDBC Prepared Statement** (untuk entitas Pemasok & Pengadaan di package `config`). 
-
-Dengan penerapan pola MVC, validasi berlapis, exception handling, serta struktur package yang rapi sesuai standar industri, aplikasi ini mampu mengelola database relasional MySQL secara profesional, terstruktur, dan mudah dikembangkan lebih lanjut.
+Inheritance juga dipakai pada package view:
